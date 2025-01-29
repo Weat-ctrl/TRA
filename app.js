@@ -1,5 +1,3 @@
-// app.js
-
 // Initialize MediaPipe Hands
 const hands = new Hands({
     locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`,
@@ -27,7 +25,7 @@ const startVideoStream = async () => {
 
 startVideoStream();
 
-// Function to update A-Frame scene based on gesture data
+// Function to handle gesture results
 function onResults(results) {
     const canvasElement = document.createElement('canvas');
     const canvasCtx = canvasElement.getContext('2d');
@@ -42,7 +40,7 @@ function onResults(results) {
         for (const landmarks of results.multiHandLandmarks) {
             drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, { color: '#00FF00', lineWidth: 5 });
             drawLandmarks(canvasCtx, landmarks, { color: '#FF0000', lineWidth: 2 });
-            
+
             // Call a function to update the A-Frame scene
             updateGesturePanel(landmarks);
         }
@@ -52,7 +50,7 @@ function onResults(results) {
 // Function to update A-Frame scene
 function updateGesturePanel(handData) {
     const gesturePanel = document.getElementById('gesture-panel');
-    // Update position or content of gesturePanel based on handData
+    // Example: Update position or content of gesturePanel based on handData
     gesturePanel.setAttribute('material', 'color', '#00FF00');
     gesturePanel.setAttribute('text', { value: 'Gesture Detected!', color: 'black' });
 }

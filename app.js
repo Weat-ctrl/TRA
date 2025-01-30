@@ -1,3 +1,5 @@
+// app.js
+
 // Initialize MediaPipe Hands
 const hands = new Hands({
     locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`,
@@ -17,10 +19,21 @@ const videoElement = document.createElement('video');
 videoElement.width = 640;
 videoElement.height = 480;
 
+const errorMessageElement = document.getElementById('errorMessage');
+
 const startVideoStream = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-    videoElement.srcObject = stream;
-    videoElement.play();
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        videoElement.srcObject = stream;
+        videoElement.play();
+    } catch (error) {
+        displayErrorMessage('Error accessing the camera: ' + error.message);
+    }
+};
+
+const displayErrorMessage = (message) => {
+    errorMessageElement.innerText = message;
+    errorMessageElement.style.display = 'block';
 };
 
 startVideoStream();

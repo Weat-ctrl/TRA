@@ -1,60 +1,72 @@
 <!DOCTYPE html>
-     <html lang="en">
-     <head>
-         <meta charset="UTF-8">
-         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-         <title>MediaPipe Hands Test</title>
-         <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-         <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"></script>
-         <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
-         <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
-     </head>
-     <body>
-         <video id="input_video" autoplay></video>
-         <canvas id="output_canvas" width="1280" height="720"></canvas>
-         <script>
-             const videoElement = document.getElementById('input_video');
-             const canvasElement = document.getElementById('output_canvas');
-             const canvasCtx = canvasElement.getContext('2d');
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediaPipe Hands with Error Handling</title>
+    <style>
+        #error-message {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 10px;
+            right: 10px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 14px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <video id="input_video" autoplay></video>
+    <canvas id="output_canvas" width="1280" height="720"></canvas>
+    <div id="error-message"></div>
+    <script>
+        const videoElement = document.getElementById('input_video');
+        const errorElement = document.getElementById('error-message');
 
-             const HAND_CONNECTIONS = [
-                 [0, 1], [1, 2], [2, 3], [3, 4], // Thumb
-                 [0, 5], [5, 6], [6, 7], [7, 8], // Index finger
-                 [0, 9], [9, 10], [10, 11], [11, 12], // Middle finger
-                 [0, 13], [13, 14], [14, 15], [15, 16], // Ring finger
-                 [0, 17], [17, 18], [18, 19], [19, 20] // Pinky
-             ];
+        function showError(message) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
 
-             function onResults(results) {
-                 canvasCtx.save();
-                 canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-                 canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
-                 if (results.multiHandLandmarks) {
-                     for (const landmarks of results.multiHandLandmarks) {
-                         drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, { color: '#00FF00', lineWidth: 2 });
-                         drawLandmarks(canvasCtx, landmarks, { color: '#FF0000', lineWidth: 1 });
-                     }
-                 }
-                 canvasCtx.restore();
-             }
+        // Check for camera support
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            showError('Your browser does not support camera access. Please use a modern browser like Chrome or Firefox.');
+        } else {
+            navigator.mediaDevices.enumerateDevices()
+                .then(devices => {
+                    const hasCamera = devices.some(device => device.kind === 'videoinput');
+                    if (!hasCamera) {
+                        showError('No camera found. Please use a device with a camera.');
+                    } else {
+                        // Initialize MediaPipe Hands
+                        const hands = new Hands({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
+                        hands.onError(error => {
+                            showError('Failed to initialize MediaPipe. Please check your internet connection and try again.');
+                        });
 
-             const hands = new Hands({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
-             hands.setOptions({
-                 maxNumHands: 2,
-                 modelComplexity: 1,
-                 minDetectionConfidence: 0.5,
-                 minTrackingConfidence: 0.5
-             });
-             hands.onResults(onResults);
+                        // Set up camera
+                        const camera = new Camera(videoElement, {
+                            onFrame: async () => {
+                                await hands.send({ image: videoElement });
+                            },
+                            width: 1280,
+                            height: 720
+                        });
+                        camera.start();
+                    }
+                });
+        }
 
-             const camera = new Camera(videoElement, {
-                 onFrame: async () => {
-                     await hands.send({ image: videoElement });
-                 },
-                 width: 1280,
-                 height: 720
-             });
-             camera.start();
-         </script>
-     </body>
-                                               </html>
+        // Handle camera access errors
+        videoElement.addEventListener('error', (error) => {
+            showError('Camera access denied. Please allow camera access to use this feature.');
+        });
+    </script>
+</body>
+</html>

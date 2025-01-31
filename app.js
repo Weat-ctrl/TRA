@@ -23,11 +23,12 @@ setupCamera();
 // Initialize MediaPipe Hand Landmarker
 const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm");
 const handLandmarker = await HandLandmarker.createFromOptions(vision, {
-    baseOptions: { modelAssetPath: "models/hand_landmarker.task" }, // Path to your model file
-    numHands: 1 // Detect one hand
+    baseOptions: { modelAssetPath: "models/hand_landmarker.task" },
+    numHands: 1, // Detect one hand
+    runningMode: "LIVE_STREAM" // Use live stream mode
 });
 
-// Handle results
+// Handle results for live stream
 function onResults(results) {
     canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
     if (results.multiHandLandmarks) {

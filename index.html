@@ -1,33 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hand Landmarker</title>
-    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
-    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm" crossorigin="anonymous"></script>
-    <style>
-        body { margin: 0; overflow: hidden; }
-        .videoView { text-align: center; }
-        .error-message { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background-color: #f8d7da; color: #721c24; padding: 10px; border: 1px solid #f5c6cb; border-radius: 5px; display: none; z-index: 1000; }
-        .output_canvas { position: absolute; left: 0; top: 0; }
-    </style>
+  <title>TRA Project</title>
+  <style>
+    body {
+      margin: 0;
+    }
+    #container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #input_video, #output_canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  </style>
 </head>
 <body>
-    <h1>Hand Landmark Detection using MediaPipe Hand Landmarker</h1>
-    <section id="demos">
-        <div id="liveView" class="videoView">
-            <button id="webcamButton" class="mdc-button mdc-button--raised">
-                <span class="mdc-button__ripple"></span>
-                <span class="mdc-button__label">ENABLE WEBCAM</span>
-            </button>
-            <div style="position: relative;">
-                <video id="webcam" autoplay playsinline></video>
-                <canvas class="output_canvas" id="output_canvas"></canvas>
-            </div>
-        </div>
-    </section>
-    <script src="js/app.js"></script>
-</body>
-    </html>
+  <div id="container">
+    <video id="input_video" width="640" height="480" autoplay playsinline></video>
+    <canvas id="output_canvas" width="640" height="480"></canvas>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <script>
+    const videoElement = document.getElementById('input_video');
+    const canvasElement = document.getElementById('output_canvas');
+    const canvasCtx = canvasElement.getContext('2d');
+
+    function onResults(results) {
+      canvasCtx.save();
+      canvasCtx.clearRect(0, 0, canvasElement

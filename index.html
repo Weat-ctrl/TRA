@@ -1,88 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hand Gesture Control</title>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
-    <style>
-        body { margin: 0; overflow: hidden; text-align: center; }
-        video, canvas { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; }
-    </style>
-</head>
-<body>
-    <video id="video" autoplay playsinline></video>
-    <canvas id="canvas"></canvas>
-
-    <script>
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        
-        // Set up camera
-        async function setupCamera() {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-            video.srcObject = stream;
-            return new Promise(resolve => video.onloadedmetadata = resolve);
-        }
-
-        // Initialize MediaPipe Hands
-        const hands = new Hands({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
-        hands.setOptions({
-            maxNumHands: 1,
-            minDetectionConfidence: 0.5,
-            minTrackingConfidence: 0.5
-        });
-
-        hands.onResults(results => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            if (results.multiHandLandmarks) {
-                for (const landmarks of results.multiHandLandmarks) {
-                    detectGesture(landmarks);
-                    drawHand(landmarks);
-                }
-            }
-        });
-
-        // Detect simple gestures
-        function detectGesture(landmarks) {
-            const thumbTip = landmarks[4];
-            const indexTip = landmarks[8];
-            const middleTip = landmarks[12];
-
-            // Simple gesture detection: Open hand vs pinch
-            const pinchDistance = Math.hypot(indexTip.x - thumbTip.x, indexTip.y - thumbTip.y);
-
-            if (pinchDistance < 0.1) {
-                console.log("Pinch detected!");
-            } else {
-                console.log("Open hand detected!");
-            }
-        }
-
-        // Draw landmarks
-        function drawHand(landmarks) {
-            ctx.fillStyle = "red";
-            for (let point of landmarks) {
-                ctx.beginPath();
-                ctx.arc(point.x * canvas.width, point.y * canvas.height, 5, 0, 2 * Math.PI);
-                ctx.fill();
-            }
-        }
-
-        // Start the app
-        async function start() {
-            await setupCamera();
-            video.play();
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const camera = new Camera(video, { onFrame: async () => await hands.send({ image: video }) });
-            camera.start();
-        }
-
-        start();
-    </script>
-</body>
-</html>
+     <html lang="en">
+     <head>
+         <meta charset="UTF-8">
+         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <title>MediaPipe Hands Tracking</title>
+         <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+         <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"></script>
+         <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+         <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+     </head>
+     <body>
+         <video id="input_video" autoplay></video>
+         <canvas id="output_canvas" width="1280" height="720"></canvas>
+         <script src="script.js"></script>
+     </body>
+     </html>

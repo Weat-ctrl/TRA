@@ -30,11 +30,11 @@ function onResults(results) {
   canvasCtx.restore();
 }
 
-// Start the camera
-async function startCamera() {
+// Start the back camera
+async function startBackCamera() {
   const constraints = {
     video: {
-      facingMode: 'environment', // Explicitly request the back camera
+      facingMode: 'environment', // Request the back camera
       width: 640,
       height: 480,
     },
@@ -44,19 +44,22 @@ async function startCamera() {
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
     videoElement.srcObject = stream;
 
-    const camera = new Camera(videoElement, {
-      onFrame: async () => {
-        await hands.send({ image: videoElement });
-      },
-      width: 640,
-      height: 480,
-    });
+    // Wait for the video to load
+    videoElement.onloadedmetadata = () => {
+      const camera = new Camera(videoElement, {
+        onFrame: async () => {
+          await hands.send({ image: videoElement });
+        },
+        width: 640,
+        height: 480,
+      });
 
-    camera.start();
+      camera.start();
+    };
   } catch (error) {
-    console.error('Error starting camera:', error);
-    alert(`Failed to start camera: ${error.message}`);
+    console.error('Error accessing back camera:', error);
+    alert(`Failed to access back camera: ${error.message}`);
   }
 }
 
-startCamera();
+startBackCamera();

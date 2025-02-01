@@ -1,12 +1,23 @@
-body {
+/* Remove default margin and padding */
+body, html {
   margin: 0;
-  overflow: hidden;
+  padding: 0;
+  overflow: hidden; /* Prevent scrolling */
 }
 
+/* Full-screen container */
+#container {
+  position: relative;
+  width: 100vw; /* Full viewport width */
+  height: 100vh; /* Full viewport height */
+}
+
+/* Make video and canvas fill the container */
 video, canvas {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  object-fit: cover; /* Ensure the video covers the entire area */
 }

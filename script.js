@@ -30,13 +30,13 @@ function onResults(results) {
   canvasCtx.restore();
 }
 
-// Start the back camera
-async function startBackCamera() {
+// Start the front camera
+async function startCamera() {
   const constraints = {
     video: {
-      facingMode: 'environment', // Request the back camera
-      width: 640,
-      height: 480,
+      facingMode: 'user', // Use the front camera
+      width: window.innerWidth, // Match screen width
+      height: window.innerHeight, // Match screen height
     },
   };
 
@@ -44,22 +44,31 @@ async function startBackCamera() {
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
     videoElement.srcObject = stream;
 
-    // Wait for the video to load
+    // Resize canvas to match video dimensions
     videoElement.onloadedmetadata = () => {
+      canvasElement.width = videoElement.videoWidth;
+      canvasElement.height = videoElement.videoHeight;
+
       const camera = new Camera(videoElement, {
         onFrame: async () => {
           await hands.send({ image: videoElement });
         },
-        width: 640,
-        height: 480,
+        width: videoElement.videoWidth,
+        height: videoElement.videoHeight,
       });
 
       camera.start();
     };
   } catch (error) {
-    console.error('Error accessing back camera:', error);
-    alert(`Failed to access back camera: ${error.message}`);
+    console.error('Error starting camera:', error);
+    alert(`Failed to start camera: ${error.message}`);
   }
 }
 
-startBackCamera();
+startCamera();
+
+// Handle window resizing
+window.addEventListener('resize', () => {
+  canvasElement.width = window.innerWidth;
+  canvasElement.height = window.innerHeight;
+});

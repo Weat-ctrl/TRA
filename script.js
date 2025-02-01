@@ -30,13 +30,42 @@ function onResults(results) {
   canvasCtx.restore();
 }
 
-// Start the camera
-const camera = new Camera(videoElement, {
-  onFrame: async () => {
-    await hands.send({ image: videoElement });
-  },
-  width: 640,
-  height: 480,
-});
+// Function to get the back camera
+async function getBackCamera() {
+  const devices = await navigator.mediaDevices.enumerateDevices();
+  const cameras = devices.filter(device => device.kind === 'videoinput');
+  const backCamera = cameras.find(camera => camera.label.toLowerCase().includes('back'));
 
-camera.start();
+  if (backCamera) {
+    return backCamera.deviceId;
+  }
+  return null; // Fallback to default if back camera is not found
+}
+
+// Start the camera
+async function startCamera() {
+  const backCameraId = await getBackCamera();
+  const constraints = {
+    video: {
+      deviceId: backCameraId ? { exact: backCameraId } : undefined,
+      facingMode: backCameraId ? undefined : { exact: 'environment' }, // Fallback to environment mode
+      width: 640,
+      height: 480,
+    },
+  };
+
+  const stream = await navigator.mediaDevices.getUserMedia(constraints);
+  videoElement.srcObject = stream;
+
+  const camera = new Camera(videoElement, {
+    onFrame: async () => {
+      await hands.send({ image: videoElement });
+    },
+    width: 640,
+    height: 480,
+  });
+
+  camera.start();
+}
+
+startCamera();

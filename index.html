@@ -3,19 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wizard Spellcaster</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <div id="container">
-    <video id="webcam" autoplay playsinline></video>
-    <canvas id="output_canvas"></canvas>
-  </div>
+  <title>Hand + Face AR</title>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar/dist/mindar-face.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three/build/three.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="container">
+    <!-- MindAR Face Camera -->
+    <div id="mindar-container">
+      <video id="webcam" autoplay playsinline></video>
+      <canvas id="output_canvas"></canvas>
+    </div>
+  </div>
   <script src="script.js"></script>
 </body>
     </html>

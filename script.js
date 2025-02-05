@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     class Obstacle {
         constructor(position, type) {
-            this.mesh = BABYLON.MeshBuilder.CreateBox('obstacle', { width: 1, height: 3, depth: 1 }, scene);
+            this.mesh = BABYLON.MeshBuilder.CreateBox('obstacle', { width: 1, height: 2, depth: 1 }, scene);
             this.mesh.position = position;
             this.mesh.material = createEmissiveMaterial(new BABYLON.Color3(0, 1, 0)); // Neon green
             this.type = type;
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     class Laser {
         constructor(position, type) {
-            this.mesh = BABYLON.MeshBuilder.CreatePlane('laser', { width: 1, height: 0.1 }, scene);
+            this.mesh = BABYLON.MeshBuilder.CreatePlane('laser', { width: 2, height: 0.1 }, scene);
             this.mesh.position = position;
             this.mesh.material = createEmissiveMaterial(new BABYLON.Color3(1, 0, 0)); // Neon red
             this.type = type;
@@ -48,14 +48,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const lasers = [];
 
     function generateObstacle() {
-        const position = new BABYLON.Vector3(Math.random() * 10 - 5, 1, -100);
+        const position = new BABYLON.Vector3(0, 1, -100); // Start from the center
         const type = 'movingBarrier'; // Example type
         const obstacle = new Obstacle(position, type);
         obstacles.push(obstacle);
     }
 
     function generateLaser() {
-        const position = new BABYLON.Vector3(Math.random() * 10 - 5, 1, -100);
+        const position = new BABYLON.Vector3(0, 1, -100); // Start from the center
         const type = 'laserGrid'; // Example type
         const laser = new Laser(position, type);
         lasers.push(laser);
@@ -66,14 +66,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function animate() {
         obstacles.forEach(obstacle => {
-            obstacle.move(0.5); // Adjust speed as necessary
+            obstacle.move(1); // Adjust speed as necessary
             if (obstacle.mesh.position.z > 10) {
                 obstacle.mesh.dispose();
             }
         });
 
         lasers.forEach(laser => {
-            laser.move(0.5); // Adjust speed as necessary
+            laser.move(1); // Adjust speed as necessary
             if (laser.mesh.position.z > 10) {
                 laser.mesh.dispose();
             }

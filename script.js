@@ -9,6 +9,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), scene);
     light.intensity = 0.7;
 
+    // Adding a simple ground plane to help with visualization
+    const ground = BABYLON.MeshBuilder.CreateGround('ground', { width: 100, height: 100 }, scene);
+    const groundMaterial = new BABYLON.StandardMaterial('groundMaterial', scene);
+    groundMaterial.diffuseColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+    ground.material = groundMaterial;
+
     function createEmissiveMaterial(color) {
         const material = new BABYLON.StandardMaterial('material', scene);
         material.emissiveColor = color;

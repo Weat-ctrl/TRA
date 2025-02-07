@@ -10,14 +10,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), scene);
     light.intensity = 0.7;
 
-    // Create a pyramid (tetrahedron)
-    const pyramid = BABYLON.MeshBuilder.CreatePolyhedron('pyramid', { type: 0, size: 5 }, scene);
-    const pyramidMaterial = new BABYLON.StandardMaterial('pyramidMaterial', scene);
-    
+    // Create a shallow cone
+    const cone = BABYLON.MeshBuilder.CreateCylinder('cone', { height: 2, diameterTop: 0.1, diameterBottom: 10, tessellation: 32 }, scene);
+    cone.rotation.x = Math.PI; // Rotate cone to make the inside visible to the camera
+    const coneMaterial = new BABYLON.StandardMaterial('coneMaterial', scene);
+
     // Create a video texture for the mandala pattern
     const videoTexture = new BABYLON.VideoTexture('videoTexture', 'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/mandala-pattern.mp4', scene, true, true);
-    pyramidMaterial.diffuseTexture = videoTexture;
-    pyramid.material = pyramidMaterial;
+    coneMaterial.diffuseTexture = videoTexture;
+    coneMaterial.backFaceCulling = false; // Ensure the texture is visible on the inside
+    cone.material = coneMaterial;
 
     // Render loop
     engine.runRenderLoop(function() {

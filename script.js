@@ -1,59 +1,31 @@
-// Get the canvas element
-     const canvas = document.getElementById("renderCanvas");
+document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById('renderCanvas');
+    const engine = new BABYLON.Engine(canvas, true);
+    const scene = new BABYLON.Scene(engine);
 
-     // Generate the Babylon.js engine
-     const engine = new BABYLON.Engine(canvas, true);
+    // Create a static ArcRotateCamera
+    const camera = new BABYLON.ArcRotateCamera('camera1', Math.PI / 2, Math.PI / 4, 10, BABYLON.Vector3.Zero(), scene);
+    camera.attachControl(canvas, false); // Make it static
 
-     // Create the scene
-     const createScene = function () {
-         const scene = new BABYLON.Scene(engine);
+    const light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), scene);
+    light.intensity = 0.7;
 
-         // Add a camera
-         const camera = new BABYLON.ArcRotateCamera(
-             "camera1",
-             Math.PI / 2,
-             Math.PI / 4,
-             10,
-             BABYLON.Vector3.Zero(),
-             scene
-         );
-         camera.attachControl(canvas, true);
+    // Create a pyramid (tetrahedron)
+    const pyramid = BABYLON.MeshBuilder.CreatePolyhedron('pyramid', { type: 0, size: 5 }, scene);
+    const pyramidMaterial = new BABYLON.StandardMaterial('pyramidMaterial', scene);
+    
+    // Create a video texture for the mandala pattern
+    const videoTexture = new BABYLON.VideoTexture('videoTexture', 'https://raw.githubusercontent.com/USERNAME/REPOSITORY_NAME/main/assets/mandala-pattern.mp4', scene, true, true);
+    pyramidMaterial.diffuseTexture = videoTexture;
+    pyramid.material = pyramidMaterial;
 
-         // Add a light
-         const light = new BABYLON.HemisphericLight(
-             "light1",
-             new BABYLON.Vector3(1, 1, 0),
-             scene
-         );
-         light.intensity = 0.7;
+    // Render loop
+    engine.runRenderLoop(function() {
+        scene.render();
+    });
 
-         // Add a sphere
-         const sphere = BABYLON.MeshBuilder.CreateSphere(
-             "sphere",
-             { diameter: 2, segments: 32 },
-             scene
-         );
-         sphere.position.y = 1;
-
-         // Add a ground
-         const ground = BABYLON.MeshBuilder.CreateGround(
-             "ground",
-             { width: 6, height: 6 },
-             scene
-         );
-
-         return scene;
-     };
-
-     // Call the createScene function
-     const scene = createScene();
-
-     // Render the scene
-     engine.runRenderLoop(function () {
-         scene.render();
-     });
-
-     // Handle window resize
-     window.addEventListener("resize", function () {
-         engine.resize();
-     });
+    // Resize the engine on window resize
+    window.addEventListener('resize', function() {
+        engine.resize();
+    });
+});

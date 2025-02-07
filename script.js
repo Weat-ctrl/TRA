@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const pyramidMaterial = new BABYLON.StandardMaterial('pyramidMaterial', scene);
     
     // Create a video texture for the mandala pattern
-    const videoTexture = new BABYLON.VideoTexture('videoTexture', 'https://raw.githubusercontent.com/USERNAME/REPOSITORY_NAME/main/assets/mandala-pattern.mp4', scene, true, true);
+    const videoTexture = new BABYLON.VideoTexture('videoTexture', 'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/mandala-pattern.mp4', scene, true, true);
     pyramidMaterial.diffuseTexture = videoTexture;
     pyramid.material = pyramidMaterial;
 

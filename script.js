@@ -8,9 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
     camera.setTarget(BABYLON.Vector3.Zero());
 
     // Create a plane
-    const plane = BABYLON.MeshBuilder.CreatePlane('plane', { size: 10 }, scene);
+    const plane = BABYLON.MeshBuilder.CreatePlane('plane', { width: 10, height: 10 }, scene);
     plane.position = new BABYLON.Vector3(0, 0, 0);
-    plane.rotation.x = Math.PI; // Rotate plane to face the camera
 
     // Apply material to the plane
     const planeMaterial = new BABYLON.StandardMaterial('planeMaterial', scene);

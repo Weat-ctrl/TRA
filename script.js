@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Apply material to the plane
     const planeMaterial = new BABYLON.StandardMaterial('planeMaterial', scene);
-    const videoTexture = new BABYLON.VideoTexture('videoTexture', 'https://raw.githubusercontent.com/USERNAME/REPOSITORY_NAME/main/assets/mandala-pattern.mp4', scene, true, true);
+    const videoTexture = new BABYLON.VideoTexture('videoTexture', 'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/mandala-pattern.mp4', scene, true, true);
     planeMaterial.diffuseTexture = videoTexture;
     plane.material = planeMaterial;
 

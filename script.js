@@ -9,11 +9,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Create a plane
     const plane = BABYLON.MeshBuilder.CreatePlane('plane', { size: 10 }, scene);
-    plane.rotation.x = Math.PI / 2; // Rotate plane to face the camera
+    plane.position = new BABYLON.Vector3(0, 0, 0);
+    plane.rotation.x = Math.PI; // Rotate plane to face the camera
 
     // Apply material to the plane
     const planeMaterial = new BABYLON.StandardMaterial('planeMaterial', scene);
-    const videoTexture = new BABYLON.VideoTexture('videoTexture', 'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/mandala-pattern.mp4', scene, true, true);
+    const videoTexture = new BABYLON.VideoTexture('videoTexture', 'https://raw.githubusercontent.com/USERNAME/REPOSITORY_NAME/main/assets/mandala-pattern.mp4', scene, true, true);
     planeMaterial.diffuseTexture = videoTexture;
     plane.material = planeMaterial;
 

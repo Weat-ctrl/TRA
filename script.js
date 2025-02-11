@@ -49,29 +49,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Array of texture paths
     const textures = [
-        'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/spirals.jpg',
-        'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/spirals2.jpg',
-        'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/spirals3.jpg',
-        'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/Scratch_BG_disco.gif',
-        'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/Mathmap-wave.gif',
-        'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/Mathmap-mercator.gif',
-        'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/SwiralTestav.gif'
+          'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/spirals.jpg',
+          'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/spirals2.jpg',
+          'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/spirals3.jpg',
+          'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/Scratch_BG_disco.gif',
+          'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/Mathmap-wave.gif',
+          'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/Mathmap-mercator.gif',
+          'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/SwiralTestav.gif
     ];
 
     // Function to generate shapes
     function generateShapes() {
-        const size = 1; // Initial size
+        const size = 0.5; // Reduced initial size
         const xPos = (Math.random() - 0.5) * 2; // Random x position
-        const yPos = -0.5 - Math.random(); // Random y position in the lower half
+        const yPos = 0; // Center y position
         const zPos = 0; // Start position
 
         const shape = createRandomShape(new BABYLON.Vector3(xPos, yPos, zPos), size, textures);
 
         // Move shape towards the camera and grow in size
         scene.onBeforeRenderObservable.add(function () {
-            shape.position.z -= 0.1; // Move the shape along the z-axis
+            // Calculate direction from center to lower part
+            const direction = new BABYLON.Vector3(xPos, -1, -1);
+            direction.normalize();
+
+            shape.position.addInPlace(direction.scale(0.1)); // Move shape
             shape.scaling.addInPlace(new BABYLON.Vector3(0.01, 0.01, 0.01)); // Grow in size
-            if (shape.position.z < -20) {
+
+            if (shape.position.z < -20 || shape.position.y < -10) {
                 shape.dispose(); // Remove the shape once it is out of view
             }
         });

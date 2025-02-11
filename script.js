@@ -49,13 +49,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Array of texture paths
     const textures = [
-        'ttps://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/spirals.jpg',
+        'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/spirals.jpg',
         'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/spirals2.jpg',
         'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/spirals3.jpg',
         'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/Scratch_BG_disco.gif',
         'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/Mathmap-wave.gif',
         'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/Mathmap-mercator.gif',
-        'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/SwiralTestav.gif
+        'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/SwiralTestav.gif'
     ];
 
     // Function to generate shapes

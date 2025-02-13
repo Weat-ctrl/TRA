@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Create a plane with the mandala pattern
     const plane = BABYLON.MeshBuilder.CreatePlane('plane', { width: 20, height: 20 }, scene);
-    plane.position = new BABYLON.Vector3(0, 0, 0);
+    plane.position = new BABYLON.Vector3(0, 0, -5); // Move the plane further back
 
     const planeMaterial = new BABYLON.StandardMaterial('planeMaterial', scene);
     const videoTexture = new BABYLON.VideoTexture('videoTexture', 'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/mandala-pattern.mp4', scene, true, true);
@@ -72,12 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const rotationAxis = new BABYLON.Vector3(Math.random(), Math.random(), Math.random()).normalize();
             scene.onBeforeRenderObservable.add(function () {
                 coin.rotate(rotationAxis, 0.02, BABYLON.Space.LOCAL);
-
-                // Check for collision with the character (future implementation)
-                // if (character.intersectsMesh(coin, false)) {
-                //     coin.dispose(); // Remove the coin
-                //     updateScore(); // Update the score
-                // }
+                console.log("Coin position: ", coin.position); // Debugging info
             });
         });
     }
@@ -98,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const size = 1; // Reverted to larger initial size
         const xPos = (Math.random() - 0.5) * 2; // Random x position
         const yPos = 0; // Center y position
-        const zPos = 0; // Start position
+        const zPos = -5; // Start position (in front of the plane)
 
         const shape = createRandomShape(new BABYLON.Vector3(xPos, yPos, zPos), size, textures);
 

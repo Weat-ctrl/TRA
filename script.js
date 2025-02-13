@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
     plane.material = planeMaterial;
 
     // Load the Rocket naught.glb character
-    BABYLON.SceneLoader.Append("https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/RocketNaut.glb", "RocketNaut.glb", scene, function (scene) {
+    BABYLON.SceneLoader.Append("https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/RocketNaut.glb", "", scene, function (scene) {
         const rocket = scene.meshes[0];
         rocket.position = new BABYLON.Vector3(0, -3, 0); // Adjust position to lower half
 

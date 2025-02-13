@@ -3,6 +3,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const engine = new BABYLON.Engine(canvas, true);
     const scene = new BABYLON.Scene(engine);
 
+    let score = 0;
+    const scoreElement = document.getElementById('score');
+
+    function updateScore() {
+        score++;
+        scoreElement.innerText = `Score: ${score}`;
+    }
+
     // Create a static UniversalCamera
     const camera = new BABYLON.UniversalCamera('camera1', new BABYLON.Vector3(0, 0, -20), scene);
     camera.setTarget(BABYLON.Vector3.Zero());
@@ -49,9 +57,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to create a spinning coin with light
     function createCoin(position) {
-        BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/", "coin.glb", scene, function (meshes) {
+        const coinUrl = 'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/coin.glb'; // Direct link to the coin.glb file
+
+        BABYLON.SceneLoader.ImportMesh("", coinUrl, "", scene, function (meshes) {
             const coin = meshes[0];
             coin.position = position;
+            coin.scaling = new BABYLON.Vector3(0.5, 0.5, 0.5); // Make the coin smaller
 
             const coinLight = new BABYLON.PointLight('coinLight', position, scene);
             coinLight.diffuse = new BABYLON.Color3(1, 1, 0); // Yellow light
@@ -61,6 +72,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const rotationAxis = new BABYLON.Vector3(Math.random(), Math.random(), Math.random()).normalize();
             scene.onBeforeRenderObservable.add(function () {
                 coin.rotate(rotationAxis, 0.02, BABYLON.Space.LOCAL);
+
+                // Check for collision with the character (future implementation)
+                // if (character.intersectsMesh(coin, false)) {
+                //     coin.dispose(); // Remove the coin
+                //     updateScore(); // Update the score
+                // }
             });
         });
     }

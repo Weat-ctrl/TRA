@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function createCollectibleOrb(position) {
         const orb = BABYLON.MeshBuilder.CreateSphere('orb', { diameter: 0.3 }, scene);
         const orbMaterial = new BABYLON.StandardMaterial('orbMaterial', scene);
-        orbMaterial.diffuseTexture = new BABYLON.Texture('path/to/transparent_texture.png', scene);
+        orbMaterial.diffuseTexture = new BABYLON.Texture('https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/transparent.png', scene);
         orbMaterial.alpha = 0.5; // Transparent texture
         orb.material = orbMaterial;
 

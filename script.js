@@ -28,6 +28,15 @@ document.addEventListener('DOMContentLoaded', function() {
     planeMaterial.diffuseTexture = videoTexture;
     plane.material = planeMaterial;
 
+    // Load the Rocket naught.glb character
+    BABYLON.SceneLoader.Append("https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/RocketNaut.glb", "", scene, function (scene) {
+        const rocket = scene.meshes[0];
+        rocket.position = new BABYLON.Vector3(0, -3, 0); // Adjust position to lower half
+
+        // Optional: Scale the rocket if it's too big or small
+        rocket.scaling = new BABYLON.Vector3(0.5, 0.5, 0.5);
+    });
+
     // Function to create a random shape
     function createRandomShape(position, size, textures) {
         const shapeTypes = ['box', 'sphere', 'cylinder'];

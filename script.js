@@ -47,6 +47,22 @@ document.addEventListener('DOMContentLoaded', function() {
         return shape;
     }
 
+    // Function to create a collectible orb
+    function createCollectibleOrb(position) {
+        const orb = BABYLON.MeshBuilder.CreateSphere('orb', { diameter: 0.3 }, scene);
+        const orbMaterial = new BABYLON.StandardMaterial('orbMaterial', scene);
+        orbMaterial.diffuseTexture = new BABYLON.Texture('path/to/transparent_texture.png', scene);
+        orbMaterial.alpha = 0.5; // Transparent texture
+        orb.material = orbMaterial;
+
+        const orbLight = new BABYLON.PointLight('orbLight', position, scene);
+        orbLight.diffuse = new BABYLON.Color3(1, 1, 0); // Yellow light
+        orbLight.intensity = 0.5;
+
+        orb.position = position;
+        return orb;
+    }
+
     // Array of texture paths
     const textures = [
         'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/spirals.jpg',
@@ -58,14 +74,20 @@ document.addEventListener('DOMContentLoaded', function() {
         'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/SwiralTestav.gif'
     ];
 
-    // Function to generate shapes
-    function generateShapes() {
+    // Function to generate shapes and orbs
+    function generateShapesAndOrbs() {
         const size = 1; // Reverted to larger initial size
         const xPos = (Math.random() - 0.5) * 2; // Random x position
         const yPos = 0; // Center y position
         const zPos = 0; // Start position
 
         const shape = createRandomShape(new BABYLON.Vector3(xPos, yPos, zPos), size, textures);
+
+        // Create collectible orbs in a line
+        for (let i = 0; i < 5; i++) {
+            const orbPosition = new BABYLON.Vector3(xPos, yPos - 1 - i * 0.5, zPos - i * 2);
+            createCollectibleOrb(orbPosition);
+        }
 
         // Move shape towards the camera with various movement patterns
         scene.onBeforeRenderObservable.add(function () {
@@ -77,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     shape.scaling.addInPlace(new BABYLON.Vector3(0.01, 0.01, 0.01));
                     break;
                 case 1: // Diagonal outward
-                    shape.position.addInPlace(new BABYLON.Vector3(0.05, -0.05, -0.1));
+                    shape.position.addInPlace(new BABYLON.Vector3((Math.random() > 0.5 ? 0.05 : -0.05), -0.05, -0.1));
                     shape.scaling.addInPlace(new BABYLON.Vector3(0.01, 0.01, 0.01));
                     break;
                 case 2: // Slow zigzag
@@ -93,8 +115,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Generate shapes at intervals
-    setInterval(generateShapes, 1000); // Generate a shape every 1 second
+    // Generate shapes and orbs at intervals
+    setInterval(generateShapesAndOrbs, 2000); // Generate shapes and orbs every 2 seconds
 
     // Render loop
     engine.runRenderLoop(function () {

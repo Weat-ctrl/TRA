@@ -47,20 +47,22 @@ document.addEventListener('DOMContentLoaded', function() {
         return shape;
     }
 
-    // Function to create a collectible orb
-    function createCollectibleOrb(position) {
-        const orb = BABYLON.MeshBuilder.CreateSphere('orb', { diameter: 0.3 }, scene);
-        const orbMaterial = new BABYLON.StandardMaterial('orbMaterial', scene);
-        orbMaterial.diffuseTexture = new BABYLON.Texture('https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/transparent.png', scene);
-        orbMaterial.alpha = 0.5; // Transparent texture
-        orb.material = orbMaterial;
+    // Function to create a spinning coin with light
+    function createCoin(position) {
+        BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/", "coin.glb", scene, function (meshes) {
+            const coin = meshes[0];
+            coin.position = position;
 
-        const orbLight = new BABYLON.PointLight('orbLight', position, scene);
-        orbLight.diffuse = new BABYLON.Color3(1, 1, 0); // Yellow light
-        orbLight.intensity = 0.5;
+            const coinLight = new BABYLON.PointLight('coinLight', position, scene);
+            coinLight.diffuse = new BABYLON.Color3(1, 1, 0); // Yellow light
+            coinLight.intensity = 0.5;
 
-        orb.position = position;
-        return orb;
+            // Apply random rotation
+            const rotationAxis = new BABYLON.Vector3(Math.random(), Math.random(), Math.random()).normalize();
+            scene.onBeforeRenderObservable.add(function () {
+                coin.rotate(rotationAxis, 0.02, BABYLON.Space.LOCAL);
+            });
+        });
     }
 
     // Array of texture paths
@@ -74,8 +76,8 @@ document.addEventListener('DOMContentLoaded', function() {
         'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/SwiralTestav.gif'
     ];
 
-    // Function to generate shapes and orbs
-    function generateShapesAndOrbs() {
+    // Function to generate shapes and coins
+    function generateShapesAndCoins() {
         const size = 1; // Reverted to larger initial size
         const xPos = (Math.random() - 0.5) * 2; // Random x position
         const yPos = 0; // Center y position
@@ -83,10 +85,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const shape = createRandomShape(new BABYLON.Vector3(xPos, yPos, zPos), size, textures);
 
-        // Create collectible orbs in a line
-        for (let i = 0; i < 5; i++) {
-            const orbPosition = new BABYLON.Vector3(xPos, yPos - 1 - i * 0.5, zPos - i * 2);
-            createCollectibleOrb(orbPosition);
+        // Create coins behind and to the sides of the shape
+        for (let i = 1; i <= 5; i++) {
+            const coinPosition = new BABYLON.Vector3(
+                xPos + (Math.random() > 0.5 ? i * 0.5 : -i * 0.5),
+                yPos - 1 - Math.random(),
+                zPos - i * 2
+            );
+            createCoin(coinPosition);
         }
 
         // Move shape towards the camera with various movement patterns
@@ -115,8 +121,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Generate shapes and orbs at intervals
-    setInterval(generateShapesAndOrbs, 2000); // Generate shapes and orbs every 2 seconds
+    // Generate shapes and coins at intervals
+    setInterval(generateShapesAndCoins, 2000); // Generate shapes and coins every 2 seconds
 
     // Render loop
     engine.runRenderLoop(function () {

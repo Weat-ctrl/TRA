@@ -60,21 +60,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to generate shapes
     function generateShapes() {
-        const size = 0.5; // Reduced initial size
+        const size = 1; // Reverted to larger initial size
         const xPos = (Math.random() - 0.5) * 2; // Random x position
         const yPos = 0; // Center y position
         const zPos = 0; // Start position
 
         const shape = createRandomShape(new BABYLON.Vector3(xPos, yPos, zPos), size, textures);
 
-        // Move shape towards the camera and grow in size
+        // Move shape towards the camera with various movement patterns
         scene.onBeforeRenderObservable.add(function () {
-            // Calculate direction from center to lower part
-            const direction = new BABYLON.Vector3(xPos, -1, -1);
-            direction.normalize();
+            const movementType = Math.floor(Math.random() * 3); // Randomly choose a movement type
 
-            shape.position.addInPlace(direction.scale(0.1)); // Move shape
-            shape.scaling.addInPlace(new BABYLON.Vector3(0.01, 0.01, 0.01)); // Grow in size
+            switch (movementType) {
+                case 0: // Direct towards the camera
+                    shape.position.z -= 0.1;
+                    shape.scaling.addInPlace(new BABYLON.Vector3(0.01, 0.01, 0.01));
+                    break;
+                case 1: // Diagonal outward
+                    shape.position.addInPlace(new BABYLON.Vector3(0.05, -0.05, -0.1));
+                    shape.scaling.addInPlace(new BABYLON.Vector3(0.01, 0.01, 0.01));
+                    break;
+                case 2: // Slow zigzag
+                    shape.position.x += Math.sin(engine.getDeltaTime() / 200) * 0.1;
+                    shape.position.z -= 0.1;
+                    shape.scaling.addInPlace(new BABYLON.Vector3(0.01, 0.01, 0.01));
+                    break;
+            }
 
             if (shape.position.z < -20 || shape.position.y < -10) {
                 shape.dispose(); // Remove the shape once it is out of view

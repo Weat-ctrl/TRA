@@ -55,25 +55,23 @@ document.addEventListener('DOMContentLoaded', function() {
         return shape;
     }
 
-    // Function to create a spinning coin with light
+    // Function to create a custom coin
     function createCoin(position) {
-        const coinUrl = 'https://raw.githubusercontent.com/Weat-ctrl/TRA/main/assets/coin.glb'; // Direct link to the coin.glb file
+        const coin = BABYLON.MeshBuilder.CreateCylinder('coin', { height: 0.1, diameter: 0.5 }, scene);
+        coin.position = position;
 
-        BABYLON.SceneLoader.ImportMesh("", coinUrl, "", scene, function (meshes) {
-            const coin = meshes[0];
-            coin.position = position;
-            coin.scaling = new BABYLON.Vector3(0.5, 0.5, 0.5); // Make the coin smaller
+        const coinMaterial = new BABYLON.StandardMaterial('coinMaterial', scene);
+        coinMaterial.diffuseColor = new BABYLON.Color3(1, 0.84, 0); // Gold color
+        coin.material = coinMaterial;
 
-            const coinLight = new BABYLON.PointLight('coinLight', position, scene);
-            coinLight.diffuse = new BABYLON.Color3(1, 1, 0); // Yellow light
-            coinLight.intensity = 0.5;
+        const coinLight = new BABYLON.PointLight('coinLight', position, scene);
+        coinLight.diffuse = new BABYLON.Color3(1, 1, 0); // Yellow light
+        coinLight.intensity = 0.5;
 
-            // Apply random rotation
-            const rotationAxis = new BABYLON.Vector3(Math.random(), Math.random(), Math.random()).normalize();
-            scene.onBeforeRenderObservable.add(function () {
-                coin.rotate(rotationAxis, 0.02, BABYLON.Space.LOCAL);
-                console.log("Coin position: ", coin.position); // Debugging info
-            });
+        // Apply random rotation
+        const rotationAxis = new BABYLON.Vector3(Math.random(), Math.random(), Math.random()).normalize();
+        scene.onBeforeRenderObservable.add(function () {
+            coin.rotate(rotationAxis, 0.02, BABYLON.Space.LOCAL);
         });
     }
 

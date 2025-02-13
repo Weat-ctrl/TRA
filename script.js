@@ -95,14 +95,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const shape = createRandomShape(new BABYLON.Vector3(xPos, yPos, zPos), size, textures);
 
-        // Create coins behind and to the sides of the shape
+        // Create coins in a line with the shape
+        const coinSpacing = 0.8; // Spacing between coins
         for (let i = 1; i <= 5; i++) {
-            const coinPosition = new BABYLON.Vector3(
-                xPos + (Math.random() > 0.5 ? i * 0.5 : -i * 0.5),
-                yPos - 1 - Math.random(),
-                zPos - i * 2
-            );
+            const coinPosition = new BABYLON.Vector3(xPos, yPos, zPos - i * coinSpacing);
             createCoin(coinPosition);
+        }
+
+        // Occasionally place some coins to the sides
+        if (Math.random() > 0.7) {
+            for (let i = 1; i <= 3; i++) {
+                const sideCoinPosition = new BABYLON.Vector3(
+                    xPos + (Math.random() > 0.5 ? i * 0.5 : -i * 0.5),
+                    yPos - 1 - Math.random(),
+                    zPos - i * 1.5
+                );
+                createCoin(sideCoinPosition);
+            }
         }
 
         // Move shape towards the camera with various movement patterns
